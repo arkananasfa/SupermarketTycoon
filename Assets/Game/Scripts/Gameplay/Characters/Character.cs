@@ -8,6 +8,16 @@ public class Character : MonoBehaviour
     
     private StateMachine _stateMachine;
     
+    public void SetNavMeshAgentSpeed(float speed)
+    {
+        _navMeshAgent.speed = speed;
+    }
+
+    public void SetNavMeshAgentStoppingDistance(float distance)
+    {
+        _navMeshAgent.stoppingDistance = distance;
+    }
+    
     public void SetStateMachine(StateMachine stateMachine)
     {
         _stateMachine = stateMachine;

@@ -1,7 +1,7 @@
 ﻿public class CharacterState : SMState
 {
 
-    private Character _character;
+    protected Character character;
     
     public CharacterState(Character @char, StateMachine stateMachine) : base(stateMachine)
     {
