@@ -13,16 +13,10 @@ public class GoodsTypeSection : MonoBehaviour, IImprovable
     
     public List<(object, object, object)> DescriptionParameters => new ()
     {
-        ("/name", $"{_type.ToString()} section", null),
-        ("/icon", $"Icon_{_type.ToString()}", null),
+        ("/header", $"Icon_{_type.ToString()}", $"{_type.ToString()} section"),
         ("Shelves count", AvaiableShelves.Count, AvaiableShelves.Count + (_newShelvesLevels.Contains(Level+1) ? 1 : 0)),
         ("Product price", GetProductPrice(Level), GetProductPrice(Level+1))
     };
-
-    private void OnMouseDown()
-    {
-        Debug.Log(name + " clicked");
-    }
 
     public int Level
     {
