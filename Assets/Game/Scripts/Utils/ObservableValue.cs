@@ -15,7 +15,7 @@ public class ObservableValue<T>
         get => _value;
         set
         {
-            if (_value.Equals(value))
+            if (_value != null && _value.Equals(value))
                 return;
             _value = value;
             OnValueChanged?.Invoke(value);

@@ -1,11 +1,11 @@
 ﻿public abstract class SMState
 {
 
-    protected StateMachine StateMachine;
+    protected StateMachine stateMachine;
     
     public SMState(StateMachine stateMachine)
     {
-        StateMachine = stateMachine;
+        this.stateMachine = stateMachine;
     }
     
     public virtual void Enter() {}

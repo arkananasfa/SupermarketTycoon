@@ -1,39 +1,57 @@
-﻿public class Client : Character
-{
-    public Vector3 ExitPosition;
+﻿using UnityEngine;
 
-    public override void Start()
+public class Client : Character
+{
+    private GoodsType _desiredGoodsType;
+    private Shelf _targetShelf;
+    private CashRegister _targetCashRegister;
+    private ClientsSpawner _spawner;
+    private Transform _exitPoint;
+    
+    [SerializeField] 
+    private Transform carryObjectParent;
+
+    private bool _isRunningAway = false;
+
+    protected void Init(ClientsSpawner spawner, Transform exitPoint, GoodsType goodsType, Shelf shelf, CashRegister targetCashRegister)
     {
         base.Start();
 
-        // Subscribe to carriedObject changes
-        carriedObject.OnValueChanged += OnCarriedObjectChanged;
+        _spawner = spawner;
+        _desiredGoodsType = goodsType;
+        _targetShelf = shelf;
+        _targetCashRegister = targetCashRegister;
+        _exitPoint = exitPoint;
     }
 
-    private void OnCarriedObjectChanged(GameObject newCarriedObject)
+    public void StopMove()
     {
-        if (newCarriedObject == null)
+        if (!_isRunningAway)
+            TakeGoods();
+        else
+            _spawner.Kill(this);
+    }
+
+    public void TakeGoods()
+    {
+        _isRunningAway = true;
+        if (_targetShelf != null && _targetShelf.TakeGood())
         {
-            // Notify the CashRegister when the client arrives with an item
-            stateMachine.SetState<IdleState>();
+            carriedObject.Value = Instantiate(_targetShelf.goodGameObject, carryObjectParent);
+            MoveToCashRegister();
         }
     }
 
-    public void OnWorkCompleted()
+    private void MoveToCashRegister()
     {
-        // Move to the exit after the cashier finishes working
-        targetPosition.Value = ExitPosition;
+        targetPosition.Value = _targetCashRegister.transform.position;
+        stateMachine.SetState<CarryState>();
+    }
+
+    public void OnTransactionComplete()
+    {
+        targetPosition.Value = _exitPoint.position;
         stateMachine.SetState<MoveState>();
     }
-
-    protected override void Update()
-    {
-        base.Update();
-
-        // Disappear when reaching the exit
-        if (stateMachine.CurrentState is MoveState && HasReachedDestination())
-        {
-            Destroy(gameObject);
-        }
-    }
+    
 }

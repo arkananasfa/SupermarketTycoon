@@ -7,12 +7,9 @@
         base.Start();
 
         // Add states with specific parameters
-        _stateMachine.AddState(new MoveState(this, _stateMachine, 3.5f, 0.1f));
-        _stateMachine.AddState(new CarryState(this, _stateMachine, 2.5f, 0.1f));
-        _stateMachine.AddState(new WorkingState(this, _stateMachine));
-
-        // Subscribe to work completion event
-        OnWorkCompleted += OnWorkCompletedHandler;
+        stateMachine.AddState(new MoveState(this, stateMachine, 3.5f, 0.1f));
+        stateMachine.AddState(new CarryState(this, stateMachine, 2.5f, 0.1f));
+        stateMachine.AddState(new WorkingState(this, stateMachine, OnWorkCompletedHandler));
 
         // Subscribe to the CashRegister's CurrentClient
         if (AssignedCashRegister != null)
@@ -24,21 +21,15 @@
     private void OnClientArrived(Client client)
     {
         if (client != null)
-        {
-            // Start working when a client arrives
             stateMachine.SetState<WorkingState>();
-        }
     }
 
     private void OnWorkCompletedHandler()
     {
-        // Notify the client that the work is done
         if (AssignedCashRegister.CurrentClient.Value != null)
-        {
-            AssignedCashRegister.CurrentClient.Value.OnWorkCompleted();
-        }
+            AssignedCashRegister.CompleteTransaction();
 
-        // Return to idle state
-        stateMachine.SetState<IdleState>();
+        if (AssignedCashRegister.CurrentClient.Value == null)
+            stateMachine.SetState<IdleState>();
     }
 }

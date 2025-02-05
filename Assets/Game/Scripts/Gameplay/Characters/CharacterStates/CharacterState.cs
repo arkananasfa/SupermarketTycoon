@@ -5,7 +5,7 @@
     
     public CharacterState(Character @char, StateMachine stateMachine) : base(stateMachine)
     {
-        _character = @char;
+        character = @char;
     }
     
 }
