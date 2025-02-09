@@ -1,5 +1,9 @@
-﻿public class ClientsSpawner
+﻿using System.Collections.Generic;
+
+public class ClientsSpawner
 {
+
+    private List<Client> spawnedClients;
     
     public Client Spawn()
     {

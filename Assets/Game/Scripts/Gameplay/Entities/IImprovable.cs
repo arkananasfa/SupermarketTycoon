@@ -10,4 +10,13 @@ public interface IImprovable
 
     public void Improve() => Level++;
 
+    public List<(object, object, object)> GetDescriptionParameters()
+    {
+        List<(object, object, object)> parameters = new();
+        if (Level != MaxLevel)
+            parameters.Add(("Level", Level, Level+1));
+        parameters.AddRange(DescriptionParameters);
+        return parameters;
+    }
+
 }

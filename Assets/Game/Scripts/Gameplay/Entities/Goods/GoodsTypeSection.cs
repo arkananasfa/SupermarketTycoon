@@ -5,11 +5,11 @@ using UnityEngine;
 public class GoodsTypeSection : MonoBehaviour, IImprovable
 {
 
-    public int MaxLevel => 100;
+    public int MaxLevel => _maxLevel;
     public ObservableValue<Shelf> MissingGoodShelf = new();
     public List<Shelf> AvaiableShelves = new();
     public float Price => (float)Math.Clamp(_startPrice + _multiplyPrice * Level * Math.Log(Level), 1, float.MaxValue);
-    public float GetProductPrice(int level) => _startProductPrice + _additionalProductPrice;
+    public float GetProductPrice(int level) => _startProductPrice + _additionalProductPrice * level;
     
     public List<(object, object, object)> DescriptionParameters => new ()
     {
@@ -31,28 +31,24 @@ public class GoodsTypeSection : MonoBehaviour, IImprovable
 
     public Transform FreezerTransform => _freezer.transform;
     
-    [SerializeField]
-    private GoodsType _type;
-    [SerializeField]
-    private GameObject _freezer;
-    [SerializeField]
-    private List<Shelf> _shelves;
-    [SerializeField]
-    private List<int> _newShelvesLevels;
-
+    [Header("Improve Settings")]
+    [SerializeField] private GoodsType _type;
+    [SerializeField] private List<int> _newShelvesLevels;
+    [SerializeField] private int _maxLevel = 100;
+    
+    [Header("Objects")]
+    [SerializeField] private GameObject _freezer;
+    [SerializeField] private List<Shelf> _shelves;
     [SerializeField] private GameObject _noShelvesGO;
 
     [Header("Improve Price")]
-    [SerializeField]
-    private float _startPrice;
-    [SerializeField]
-    private float _multiplyPrice;
+    [SerializeField] private float _startPrice;
+    [SerializeField] private float _multiplyPrice;
     
     [Header("Product Price")]
-    [SerializeField]
-    private float _startProductPrice;
-    [SerializeField]
-    private float _additionalProductPrice;
+    [SerializeField] private float _startProductPrice;
+    [SerializeField] private float _additionalProductPrice;
+
     
     private List<Shelf> _missingGoodShelves = new ();
     private int _level = 1;
@@ -73,7 +69,8 @@ public class GoodsTypeSection : MonoBehaviour, IImprovable
     public void Improve()
     {
         Level++;
-        _noShelvesGO?.SetActive(false);
+        if (_noShelvesGO != null)
+            _noShelvesGO.SetActive(false);
     }
 
     private void ActivateShelf(Shelf shelf)

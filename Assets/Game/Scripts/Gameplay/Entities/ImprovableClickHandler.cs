@@ -11,9 +11,9 @@ public class ImprovableClickHandler : MonoBehaviour
         _improvable = GetComponent<IImprovable>();
     }
 
-    private void OnMouseDown()
+    private void OnMouseUpAsButton()
     {
-        Debug.Log(name + " clicked");
+        ImproveUI.Open(_improvable);
     }
     
 }

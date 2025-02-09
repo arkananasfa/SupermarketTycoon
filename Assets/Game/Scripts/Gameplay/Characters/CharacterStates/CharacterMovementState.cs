@@ -15,7 +15,7 @@
     public override void Enter()
     {
         character.SetAnimatorBool("IsMoving", true);
-        character.SetAnimatorBool("IsCarrying", _isCarrying);
+        character.SetBoxActive(_isCarrying);
         
         character.SetNavMeshAgentSpeed(_speed);
         character.SetNavMeshAgentStoppingDistance(_stoppingDistance);

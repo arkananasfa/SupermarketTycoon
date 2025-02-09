@@ -6,6 +6,8 @@ public class Character : MonoBehaviour
     public ObservableValue<Vector3> targetPosition = new ObservableValue<Vector3>();
     public ObservableValue<GameObject> carriedObject = new ObservableValue<GameObject>();
 
+    [SerializeField] private GameObject box;
+    
     private NavMeshAgent _navMeshAgent;
     private Animator _animator;
     protected StateMachine stateMachine;
@@ -17,14 +19,14 @@ public class Character : MonoBehaviour
 
         stateMachine = new StateMachine();
         stateMachine.AddState(new IdleState(this, stateMachine));
-        stateMachine.AddState(new MoveState(this, stateMachine, 3.5f, 0.1f)); // Example speed and stopping distance
-        stateMachine.AddState(new CarryState(this, stateMachine, 2.5f, 0.1f)); // Slower speed when carrying
+        stateMachine.AddState(new MoveState(this, stateMachine, 3.5f, 0.1f));
+        stateMachine.AddState(new CarryState(this, stateMachine, 2.5f, 0.1f));
         stateMachine.AddState(new WorkingState(this, stateMachine));
 
         stateMachine.SetState<IdleState>();
     }
 
-    private void SetTarget(GameObject target)
+    public void SetTarget(GameObject target)
     {
         targetPosition.Value = target.transform.position;
         _navMeshAgent.SetDestination(targetPosition.Value);
@@ -68,5 +70,11 @@ public class Character : MonoBehaviour
     public void SetAnimatorTrigger(string parameter)
     {
         _animator.SetTrigger(parameter);
+    }
+
+    public void SetBoxActive(bool isActive)
+    {
+        if (box != null)
+            box.SetActive(isActive);
     }
 }
